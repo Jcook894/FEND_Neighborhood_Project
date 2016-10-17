@@ -11,10 +11,10 @@ var locationArray = ko.observableArray ([
 
 <!-- View Model -->
 
+// Opens and closes nav menu.
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
 }
-
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
@@ -277,21 +277,23 @@ function initMap() {
            });
 
       markersArray().push(marker);
+
       var message = "hello world!";
 
       var infoWindow = new google.maps.InfoWindow({
         content: message
       });
 
-      marker.addListener('click', function (){
-        infoWindow.open(map, marker);
+// Gives every marker a InfoWindow.
+    google.maps.event.addListener(marker,'click', (function(marker){
+        return function() {
+        infoWindow.setContent(infoWindow.content);
+        infoWindow.open(map,marker);
+    };
+  })(marker));
 
 
-    });
  }
-
-
-
 
 
 };
