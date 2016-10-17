@@ -9,6 +9,19 @@ var locationArray = ko.observableArray ([
   {title:'condo', location:{lat: 41.767228, lng:-72.676470} }
 ]);
 
+<!-- View Model -->
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+}
+
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
+
+
+
 <!-- GoogleMap API -->
 function initMap() {
   var style = [

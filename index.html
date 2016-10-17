@@ -7,10 +7,13 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
+    <h1>Neighborhood Project</h1>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    </div>
+      <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
       <div id="map"></div>
-      <div>
-        <h1>Neighborhood Project</h1>
-      </div>
  </body>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsjGimn5mrdv4SaHko6T4Ge8hChEHQQFc&callback=initMap"
     async defer></script>
