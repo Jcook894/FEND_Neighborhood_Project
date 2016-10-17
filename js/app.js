@@ -14,11 +14,11 @@ var locationArray = ko.observableArray ([
 // Opens and closes nav menu.
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-}
+};
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-}
+};
 
 
 
@@ -264,7 +264,8 @@ function initMap() {
     styles: style
   });
 
-
+// Iterates through the locationArray and gives the marker a proper
+// location.
  for(var i = 0; i < locationArray().length; i++){
    var locations = locationArray()[i].location;
    var title = locationArray()[i].title;
@@ -281,14 +282,15 @@ function initMap() {
       var message = "hello world!";
 
       var infoWindow = new google.maps.InfoWindow({
-        content: message
+        content: title,
+        position: locations
       });
 
 // Gives every marker a InfoWindow.
     google.maps.event.addListener(marker,'click', (function(marker){
         return function() {
-        infoWindow.setContent(infoWindow.content);
-        infoWindow.open(map,marker);
+        infoWindow.setContent("<div>" + marker.title + "</div>");
+        infoWindow.open(map, marker);
     };
   })(marker));
 
