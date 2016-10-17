@@ -1,11 +1,13 @@
 <!-- Global Variables -->
 var map;
 var markersArray = ko.observableArray([]);
-
-
-
-
-
+var locationArray = ko.observableArray ([
+  {title:'hartford Hospital', location:{lat: 41.754582, lng:-72.678633} },
+  {title:'school', location:{lat: 41.755042, lng:-72.665532} },
+  {title:'park', location:{lat: 41.757419, lng:-72.664175} },
+  {title:'house', location:{lat: 41.764117, lng:-72.671873} },
+  {title:'condo', location:{lat: 41.767228, lng:-72.676470} }
+]);
 
 <!-- GoogleMap API -->
 function initMap() {
@@ -242,23 +244,12 @@ function initMap() {
     ]
   }
 ];
+
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 41.764117, lng: -72.676470},
     zoom: 13,
     styles: style
   });
-
-// Locations Array
-var locationArray = ko.observableArray ([
-  {title:'hartford Hospital', location:{lat: 41.754582, lng:-72.678633} },
-  {title:'school', location:{lat: 41.755042, lng:-72.665532} },
-  {title:'park', location:{lat: 41.757419, lng:-72.664175} },
-  {title:'house', location:{lat: 41.764117, lng:-72.671873} },
-  {title:'condo', location:{lat: 41.767228, lng:-72.676470} }
-]);
- console.log(locationArray()[0].title);
-
-
 
 
  for(var i = 0; i < locationArray().length; i++){
@@ -268,10 +259,26 @@ var locationArray = ko.observableArray ([
    var marker = new google.maps.Marker({
        position: locations,
        map: map,
-       title: title
+       title: title,
+       animation: google.maps.Animation.DROP
            });
 
       markersArray().push(marker);
+      var message = "hello world!";
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: message
+      });
+
+      marker.addListener('click', function (){
+        infoWindow.open(map, marker);
+
+
+    });
  }
+
+
+
+
 
 };
