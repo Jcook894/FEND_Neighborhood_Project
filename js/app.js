@@ -10,16 +10,17 @@ var locationArray = ko.observableArray ([
 ]);
 
 <!-- View Model -->
-
 //Binds the location title to the list in the navigation bar.
- function applyLocations(title) {
+ function applyLocations(title, marker) {
    for(var i = 0; i < locationArray().length; i++);{
      title = locationArray()[i];
+     marker = markersArray()[i];
 
-   };
+  };
 
  };
- ko.applyBindings(applyLocations());
+
+ko.applyBindings(applyLocations());
 
 // Opens and closes nav menu.
 function openNav() {
@@ -299,6 +300,7 @@ function initMap() {
 // Gives every marker a InfoWindow.
     google.maps.event.addListener(marker,'click', (function(marker){
         return function() {
+        applyLocations();
         infoWindow.setContent("<div>" + marker.title + "</div>");
         infoWindow.open(map, marker);
     };
