@@ -8,13 +8,12 @@
   </head>
   <body>
     <h1>Neighborhood Project</h1>
-    <div id="mySidenav" class="sidenav">
+    <div id="mySidenav" class="sidenav" data-bind="foreach: locationArray" >
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <h1> Locations </h1>
-        <ul data-bind=" foreach: locationArray">
-          <li data-bind='text: title'></li>
-        </ul>
-    </div>
+          <ul>
+            <button data-bind="text: title"></button>
+          </ul>
+        </div>
       <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Location Menu</span>
       <div id="map"></div>
  </body>

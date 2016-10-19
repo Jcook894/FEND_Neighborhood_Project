@@ -15,16 +15,12 @@ var locationArray = ko.observableArray ([
 
 
 //Binds the location title to the list in the navigation bar.
- function applyLocations(title, marker) {
-   for(var i = 0; i < locationArray().length; i++);{
-     title = locationArray()[i];
-     marker = markersArray()[i];
 
-  };
 
- };
 
-ko.applyBindings(applyLocations());
+
+
+
 
 // Opens and closes nav menu.
 function openNav() {
@@ -292,7 +288,10 @@ function initMap() {
        animation: google.maps.Animation.DROP
            });
 
-      markersArray().push(marker);
+      locationArray()[i].marker = marker;
+
+
+
 
       var message = "hello world!";
 
@@ -303,19 +302,24 @@ function initMap() {
 
 
       google.maps.event.addListener(marker,'click', (function(marker){
+          locationArray();
           return function() {
-          infoWindow.open(map, marker, windowInfo());
-      };})(marker));
+          infoWindow.setContent("<div>" + marker.title + "</div>");
+          infoWindow.open( map, marker, windowInfo());
+
+      }
+
+    })(marker));
 
 
 
-// all the information and street view that goes into the info window.
+
+// all the information that goes into the window.
 function windowInfo(){
   var streetView = new google.maps.StreetViewService();
   var streetRadius = 100;
 
-//Grabs the data from street view service, and if any errors occur,
-//return no data found.
+
     function getStreetView(data, status){
       if(status == google.maps.StreetViewStatus){
         var nearLocation = data.locations.latLng;
@@ -333,7 +337,7 @@ function windowInfo(){
         var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoOptions);
       }
       else{
-        infoWindow.setContent("<div>" + marker.title + '</div>'+'<div> Street view not available</div>');
+       infoWindow.setContent("<div>" + marker.title + '</div>'+'<div> Street view not available</div>');
       }
     };
 
@@ -341,5 +345,9 @@ function windowInfo(){
 
 
   };
+
 };
+
 };
+
+  ko.applyBindings( locationArray())
