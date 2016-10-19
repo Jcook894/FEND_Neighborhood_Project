@@ -1,4 +1,5 @@
 <!-- Global Variables -->
+var panorama;
 var map;
 var markersArray = ko.observableArray([]);
 var locationArray = ko.observableArray ([
@@ -10,6 +11,9 @@ var locationArray = ko.observableArray ([
 ]);
 
 <!-- View Model -->
+
+
+
 //Binds the location title to the list in the navigation bar.
  function applyLocations(title, marker) {
    for(var i = 0; i < locationArray().length; i++);{
@@ -297,17 +301,45 @@ function initMap() {
         position: locations
       });
 
-// Gives every marker a InfoWindow.
-    google.maps.event.addListener(marker,'click', (function(marker){
-        return function() {
-        applyLocations();
-        infoWindow.setContent("<div>" + marker.title + "</div>");
-        infoWindow.open(map, marker);
+
+      google.maps.event.addListener(marker,'click', (function(marker){
+          return function() {
+          infoWindow.open(map, marker, windowInfo());
+      };})(marker));
+
+
+
+// all the information and street view that goes into the info window.
+function windowInfo(){
+  var streetView = new google.maps.StreetViewService();
+  var streetRadius = 100;
+
+//Grabs the data from street view service, and if any errors occur,
+//return no data found.
+    function getStreetView(data, status){
+      if(status == google.maps.StreetViewStatus){
+        var nearLocation = data.locations.latLng;
+        var heading = google.maps.geometry.spherical.computeHeading(
+          nearLocation, marker.postion);
+        infoWindow.setContent("<div>" + marker.title + '<div id="pano"></div>');
+        var panoOptions = {
+          position: nearLocation,
+          pov: {
+            heading: heading,
+            pitch: 30
+          }
+
+        };
+        var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoOptions);
+      }
+      else{
+        infoWindow.setContent("<div>" + marker.title + '</div>'+'<div> Street view not available</div>');
+      }
     };
-  })(marker));
+
+    streetView.getPanoramaByLocation(marker.position, streetRadius, getStreetView)
 
 
-}
-
-
+  };
+};
 };
