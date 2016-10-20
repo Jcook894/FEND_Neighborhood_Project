@@ -1,7 +1,7 @@
 <!-- Global Variables -->
 var panorama;
 var map;
-var markersArray = ko.observableArray([]);
+var marker;
 var locationArray = ko.observableArray ([
   {title:'Hartford Hospital', location:{lat: 41.754582, lng:-72.678633} },
   {title:'School', location:{lat: 41.755042, lng:-72.665532} },
@@ -15,12 +15,14 @@ var locationArray = ko.observableArray ([
 
 
 //Binds the location title to the list in the navigation bar.
+function viewModel() {
+  this.location = locationArray();
+  this.marker = marker;
 
-
-
-
-
-
+  if(this.location == this.marker){
+    infoWindow.open(this.marker);
+  }
+};
 
 // Opens and closes nav menu.
 function openNav() {
@@ -302,10 +304,12 @@ function initMap() {
 
 
       google.maps.event.addListener(marker,'click', (function(marker){
-          locationArray();
+
           return function() {
+
           infoWindow.setContent("<div>" + marker.title + "</div>");
           infoWindow.open( map, marker, windowInfo());
+          //viewModel();
 
       }
 
@@ -349,5 +353,4 @@ function windowInfo(){
 };
 
 };
-
-  ko.applyBindings( locationArray())
+ko.applyBindings(new viewModel());
