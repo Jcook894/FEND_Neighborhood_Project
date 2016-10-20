@@ -1,4 +1,5 @@
 <!-- Global Variables -->
+
 var panorama;
 var map;
 var marker;
@@ -16,14 +17,14 @@ var locationArray = ko.observableArray ([
 
 //Binds the location title to the list in the navigation bar.
 function viewModel() {
-  this.location = locationArray();
-  this.marker = marker;
+  this.openWindow = function(location, title){
 
-  if(this.location == this.marker){
-    infoWindow.open(this.marker);
-  }
-};
+    if(location=== marker.title){
+      infoWindow.open();
+    }
 
+  };
+}
 // Opens and closes nav menu.
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -309,7 +310,6 @@ function initMap() {
 
           infoWindow.setContent("<div>" + marker.title + "</div>");
           infoWindow.open( map, marker, windowInfo());
-          //viewModel();
 
       }
 
@@ -324,9 +324,10 @@ function windowInfo(){
   var streetRadius = 100;
 
 
+
     function getStreetView(data, status){
-      if(status == google.maps.StreetViewStatus){
-        var nearLocation = data.locations.latLng;
+      if(status == google.maps.StreetViewStatus.OK){
+        var nearLocation = data.location.latLng;
         var heading = google.maps.geometry.spherical.computeHeading(
           nearLocation, marker.postion);
         infoWindow.setContent("<div>" + marker.title + '<div id="pano"></div>');
