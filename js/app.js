@@ -32,16 +32,16 @@ function initMap() {
       });
 
 
-function clickMe (){
+
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
-          windowInfo();
+          
           infoWindow.setContent("<div>" + marker.title + "</div>");
           infoWindow.open( map, marker);
       }
 })(marker));
-}
+
 
 };
 
@@ -79,14 +79,9 @@ var style=[{elementType:"geometry",stylers:[{color:"#1d2c4d"}]},{elementType:"la
 
 //Binds the location title to the list in the navigation bar.
 function viewModel() {
-  var infoWindow;
-
-  this.openWindow = function(location, marker){
-    if(marker !== null){
-
-      console.log(marker);
-    }
-  };
+  this.openWindow = function(location) {
+    google.maps.event.trigger(location.marker,'click');
+  }
 };
 // Opens and closes nav menu.
 function openNav() {
