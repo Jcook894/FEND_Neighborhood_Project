@@ -22,8 +22,8 @@ function initMap() {
     styles: style
   });
 
-  var defaultMarker = changeMarker('0091ff');
-  var highlightedMarker = changeMarker('ff66ff');
+  var defaultMarker = changeMarker('ff66ff');
+  var highlightedMarker = changeMarker('66ccff');
 
 // Iterates through the locationArray and gives the marker a proper
 // location.
@@ -35,6 +35,7 @@ function initMap() {
        position: locations,
        map: map,
        title: title,
+       icon: defaultMarker,
        animation: google.maps.Animation.DROP
            });
 
@@ -50,9 +51,9 @@ function initMap() {
       marker.addListener('click', function() {
             this.setIcon(highlightedMarker);
           });
-          marker.addListener('click', function() {
+        /*  marker.addListener('click', function() {
             this.setIcon(defaultMarker);
-          });
+          });*/
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
@@ -86,8 +87,16 @@ function changeMarker (color){
 function viewModel() {
   this.openWindow = function(location) {
     google.maps.event.trigger(location.marker,'click');
-  }
+  };
+
+
 };
+// If google maps is not working, throw and error message.
+function googleError(){
+  window.alert("google not working");
+}
+
+
 // Opens and closes nav menu.
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
