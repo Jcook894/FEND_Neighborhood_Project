@@ -2,7 +2,7 @@
 var map;
 var marker;
 var locationArray = ko.observableArray ([
-  {title:'Bushnell on the Park', location:{lat: 41.754582, lng:-72.678633}},
+  {title:'State House', location:{lat: 41.763711, lng:-72.685093} },
   {title:'School', location:{lat: 41.755042, lng:-72.665532} },
   {title:'Park', location:{lat: 41.757419, lng:-72.664175} },
   {title:'House', location:{lat: 41.764117, lng:-72.671873} },
