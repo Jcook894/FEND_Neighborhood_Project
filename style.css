@@ -5,8 +5,13 @@ html, body {
 }
 
 #map {
-  height: 50%;
+  height: 75%;
 
+}
+
+#pano{
+  width: 200px;
+  height: 200px;
 }
 
 body {

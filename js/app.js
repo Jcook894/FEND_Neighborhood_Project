@@ -2,7 +2,7 @@
 var map;
 var marker;
 var locationArray = ko.observableArray ([
-  {title:'Hartford Hospital', location:{lat: 41.754582, lng:-72.678633} },
+  {title:'Bushnell on the Park', location:{lat: 41.754582, lng:-72.678633}},
   {title:'School', location:{lat: 41.755042, lng:-72.665532} },
   {title:'Park', location:{lat: 41.757419, lng:-72.664175} },
   {title:'House', location:{lat: 41.764117, lng:-72.671873} },
@@ -58,25 +58,22 @@ function initMap() {
 
       function getStreetData (data, status){
 
-        if(status == google.maps.StreetViewStatus.OK){
-          var nearStreet = data.location.latLng;
-          var heading = google.maps.geometry.spherical.computeHeading( nearStreet, marker);
-           infoWindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>')
-          var panoramaOptions = {
-              position: nearStreet,
-              pov: {
-              heading: heading,
-              pitch: 30
-                  }
-                };
-      var panorama = new google.maps.StreetViewPanorama(
-      document.getElementById('pano'), panoramaOptions);
-
-      } else {
+      if(status == google.maps.StreetViewStatus.OK){
+        var nearStreet = data.location.latLng;
+        var heading = google.maps.geometry.spherical.computeHeading( nearStreet, marker.position);
+        var panoramaOptions = {
+            position: nearStreet,
+            pov: {
+            heading: heading,
+            pitch: 30
+              }
+          };
+        var panorama = new google.maps.StreetViewPanorama(
+        document.getElementById('pano'), panoramaOptions);
+      }
+      else {
             infoWindow.setContent('<div>No Street View Found</div>');
           }
-
-      streetViewService.getPanoramaByLocation(marker.location, streetRadius, getStreetData);
 
 
 
@@ -93,8 +90,9 @@ function initMap() {
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
           infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div>");
+          streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
           infoWindow.open( map, marker);
-          getStreetData();
+
       }
 })(marker));
 
