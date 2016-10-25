@@ -13,6 +13,9 @@ var style=[{elementType:"geometry",stylers:[{color:"#1d2c4d"}]},{elementType:"la
 
 
 
+
+
+
 <!-- GoogleMap API -->
 function initMap() {
 
@@ -48,6 +51,38 @@ function initMap() {
         position: locations
       });
 
+      //TODO: fix location on the Street view.
+
+      var streetViewService = new google.maps.StreetViewService();
+      var streetRadius = 50;
+
+      function getStreetData (data, status){
+
+        if(status == google.maps.StreetViewStatus.OK){
+          var nearStreet = data.location.latLng;
+          var heading = google.maps.geometry.spherical.computeHeading( nearStreet, marker);
+           infoWindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>')
+          var panoramaOptions = {
+              position: nearStreet,
+              pov: {
+              heading: heading,
+              pitch: 30
+                  }
+                };
+      var panorama = new google.maps.StreetViewPanorama(
+      document.getElementById('pano'), panoramaOptions);
+
+      } else {
+            infoWindow.setContent('<div>No Street View Found</div>');
+          }
+
+      streetViewService.getPanoramaByLocation(marker.location, streetRadius, getStreetData);
+
+
+
+
+      }
+
       marker.addListener('click', function() {
             this.setIcon(highlightedMarker);
           });
@@ -57,14 +92,16 @@ function initMap() {
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
-          infoWindow.setContent("<div>" + marker.title + "</div>");
+          infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div>");
           infoWindow.open( map, marker);
+          getStreetData();
       }
 })(marker));
 
 
 };
 
+//changes the color of the marker.
 function changeMarker (color){
   var markerColor = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ color +
@@ -89,13 +126,12 @@ function viewModel() {
     google.maps.event.trigger(location.marker,'click');
   };
 
-
 };
+
 // If google maps is not working, throw and error message.
 function googleError(){
-  window.alert("google not working");
+  window.alert("Google Maps request error");
 }
-
 
 // Opens and closes nav menu.
 function openNav() {
