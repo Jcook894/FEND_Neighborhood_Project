@@ -3,19 +3,17 @@ var map;
 var marker;
 var locationArray = ko.observableArray ([
   {title:'State House', location:{lat: 41.763711, lng:-72.685093} },
-  {title:'School', location:{lat: 41.755042, lng:-72.665532} },
-  {title:'Park', location:{lat: 41.757419, lng:-72.664175} },
+  {title:'Hartford School', location:{lat: 41.755042, lng:-72.665532} },
+  {title:'Keeney Park', location:{lat: 41.757419, lng:-72.664175} },
   {title:'House', location:{lat: 41.764117, lng:-72.671873} },
-  {title:'Condo', location:{lat: 41.767228, lng:-72.676470} }
+  {title:'Subway', location:{lat: 41.767228, lng:-72.676470} }
 ]);
 
 var style=[{elementType:"geometry",stylers:[{color:"#1d2c4d"}]},{elementType:"labels.text.fill",stylers:[{color:"#8ec3b9"}]},{elementType:"labels.text.stroke",stylers:[{color:"#1a3646"}]},{featureType:"administrative.country",elementType:"geometry.stroke",stylers:[{color:"#4b6878"}]},{featureType:"administrative.land_parcel",elementType:"labels.text.fill",stylers:[{color:"#64779e"}]},{featureType:"administrative.province",elementType:"geometry.stroke",stylers:[{color:"#4b6878"}]},{featureType:"landscape.man_made",elementType:"geometry.stroke",stylers:[{color:"#334e87"}]},{featureType:"landscape.natural",elementType:"geometry",stylers:[{color:"#023e58"}]},{featureType:"poi",elementType:"geometry",stylers:[{color:"#283d6a"}]},{featureType:"poi",elementType:"labels.text.fill",stylers:[{color:"#6f9ba5"}]},{featureType:"poi",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"poi.park",elementType:"geometry.fill",stylers:[{color:"#023e58"}]},{featureType:"poi.park",elementType:"labels.text.fill",stylers:[{color:"#3C7680"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#304a7d"}]},{featureType:"road",elementType:"labels.text.fill",stylers:[{color:"#98a5be"}]},{featureType:"road",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"road.highway",elementType:"geometry",stylers:[{color:"#2c6675"}]},{featureType:"road.highway",elementType:"geometry.stroke",stylers:[{color:"#255763"}]},{featureType:"road.highway",elementType:"labels.text.fill",stylers:[{color:"#b0d5ce"}]},{featureType:"road.highway",elementType:"labels.text.stroke",stylers:[{color:"#023e58"}]},{featureType:"transit",elementType:"labels.text.fill",stylers:[{color:"#98a5be"}]},{featureType:"transit",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"transit.line",elementType:"geometry.fill",stylers:[{color:"#283d6a"}]},{featureType:"transit.station",elementType:"geometry",stylers:[{color:"#3a4762"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#0e1626"}]},{featureType:"water",elementType:"labels.text.fill",stylers:[{color:"#4e6d70"}]}];
 
 
 
-
-
-
+// Initiates the google maps api.
 <!-- GoogleMap API -->
 function initMap() {
 
@@ -51,7 +49,6 @@ function initMap() {
         position: locations
       });
 
-      //TODO: fix location on the Street view.
 
       var streetViewService = new google.maps.StreetViewService();
       var streetRadius = 50;
@@ -75,10 +72,7 @@ function initMap() {
             infoWindow.setContent('<div>No Street View Found</div>');
           }
 
-
-
-
-      }
+      };
 
       marker.addListener('click', function() {
             this.setIcon(highlightedMarker);
@@ -96,10 +90,9 @@ function initMap() {
       }
 })(marker));
 
-
 };
 
-//changes the color of the marker.
+//Changes the color of the marker.
 function changeMarker (color){
   var markerColor = new google.maps.MarkerImage(
     'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ color +
@@ -111,7 +104,32 @@ function changeMarker (color){
           new google.maps.Size(21,34));
         return markerColor;
 
-}
+      };
+
+//Grabs the wikipedia api and sets the search to the marker title.
+    var title = marker.title;
+    var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
+        'action=opensearch&search=' + title +
+        '&format=json&callback=wikiCallback'
+
+    $.ajax({
+      url: wikiUrl,
+      dataType: "jsonp",
+      jsonp: "callback",
+      success: function (response){
+        var wikiArticle = response[1];
+
+
+        for(var i = 0; i < wikiArticle.length; i++){
+          wikiStr = wikiArticle[1];
+          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
+          infoWindow.setContent('<div><a>'+ url + '</a></div><div id="pano"</div>');
+          infoWindow.open(map, marker);
+          console.log(url);
+        }
+
+      }
+    });
 
 };
 
@@ -124,7 +142,11 @@ function viewModel() {
     google.maps.event.trigger(location.marker,'click');
   };
 
+
 };
+
+//loads the NY times articles.
+
 
 // If google maps is not working, throw and error message.
 function googleError(){
