@@ -75,6 +75,7 @@ function initMap() {
       };
 
       marker.addListener('click', function() {
+
             this.setIcon(highlightedMarker);
           });
         /*  marker.addListener('click', function() {
@@ -83,6 +84,7 @@ function initMap() {
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
+          wikipedia();
           infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div>");
           streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
           infoWindow.open( map, marker);
@@ -107,32 +109,46 @@ function changeMarker (color){
       };
 
 //Grabs the wikipedia api and sets the search to the marker title.
-    var title = marker.title;
+function wikipedia(){
+
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
         'action=opensearch&search=' + title +
         '&format=json&callback=wikiCallback'
 
+//If you cant get a wiki request, throw an error message.
+    var wikiError = setTimeout(function(){
+      window.alert('Cant find that wiki request yo!');
+      console.log("wikipedia aint working!!!")
+    }, 8000);
+
     $.ajax({
       url: wikiUrl,
       dataType: "jsonp",
-      jsonp: "callback",
+      //jsonp: "callback",
       success: function (response){
         var wikiArticle = response[1];
 
 
+
         for(var i = 0; i < wikiArticle.length; i++){
           wikiStr = wikiArticle[1];
-          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
-          infoWindow.setContent('<div><a>'+ url + '</a></div><div id="pano"</div>');
-          infoWindow.open(map, marker);
-          console.log(url);
-        }
+            var title = marker.title[i];
 
+            var content = document.getElementById('wikiElem');
+
+          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
+          infoWindow.setContent('<div id="wikiElem"><div>'+ url + '</div>');
+
+          console.log(response);
+        }
+// Clears the time out if the wiki request is made.
+        clearTimeout(wikiError);
       }
+
     });
 
 };
-
+};
 
 <!-- View Model -->
 
