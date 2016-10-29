@@ -50,7 +50,8 @@ body {
     margin-left: 50px;
 }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
+@media screen and (max-height: 100px) {
+  .sidenav {padding-top: 0px}
+  .sidenav {font-size: 12}
 
 }

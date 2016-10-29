@@ -4,8 +4,8 @@ var marker;
 var locationArray = ko.observableArray ([
   {title:'State House', location:{lat: 41.763711, lng:-72.685093} },
   {title:'Hartford School', location:{lat: 41.755042, lng:-72.665532} },
-  {title:'Keeney Park', location:{lat: 41.757419, lng:-72.664175} },
-  {title:'House', location:{lat: 41.764117, lng:-72.671873} },
+  {title:'Burger King', location:{lat: 41.757419, lng:-72.664175} },
+  {title:'Quiznos', location:{lat: 41.764117, lng:-72.671873} },
   {title:'Subway', location:{lat: 41.767228, lng:-72.676470} }
 ]);
 
@@ -26,6 +26,7 @@ function initMap() {
   var defaultMarker = changeMarker('ff66ff');
   var highlightedMarker = changeMarker('66ccff');
 
+
 // Iterates through the locationArray and gives the marker a proper
 // location.
  for(var i = 0; i < locationArray().length; i++){
@@ -39,6 +40,7 @@ function initMap() {
        icon: defaultMarker,
        animation: google.maps.Animation.DROP
            });
+
 
       locationArray()[i].marker = marker;
 
@@ -72,16 +74,17 @@ function initMap() {
             infoWindow.setContent('<div>No Street View Found</div>');
           }
 
-      };
 
+
+      };
       marker.addListener('click', function() {
 
             this.setIcon(highlightedMarker);
           });
-        /*  marker.addListener('click', function() {
-            this.setIcon(defaultMarker);
-          });*/
 
+      marker.addListener('click', function() {
+            this.setIcon(defaultMarker);
+          });
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
           wikipedia();
@@ -110,6 +113,11 @@ function changeMarker (color){
 
 //Grabs the wikipedia api and sets the search to the marker title.
 function wikipedia(){
+  for(var i = 0; i < locationArray().length;i++){
+    var title = locationArray()[2].title;
+    
+  }
+
 
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
         'action=opensearch&search=' + title +
@@ -120,6 +128,7 @@ function wikipedia(){
       window.alert('Cant find that wiki request yo!');
       console.log("wikipedia aint working!!!")
     }, 8000);
+
 
     $.ajax({
       url: wikiUrl,
@@ -132,14 +141,11 @@ function wikipedia(){
 
         for(var i = 0; i < wikiArticle.length; i++){
           wikiStr = wikiArticle[1];
-            var title = marker.title[i];
-
-            var content = document.getElementById('wikiElem');
 
           var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
-          infoWindow.setContent('<div id="wikiElem"><div>'+ url + '</div>');
+          infoWindow.setContent('<p>'+ url + '</p>');
 
-          console.log(response);
+          console.log(title);
         }
 // Clears the time out if the wiki request is made.
         clearTimeout(wikiError);
