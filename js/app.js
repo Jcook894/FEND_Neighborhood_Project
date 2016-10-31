@@ -4,7 +4,7 @@ var marker;
 var locationArray = ko.observableArray ([
   {title:'State House', location:{lat: 41.763711, lng:-72.685093} },
   {title:'Hartford School', location:{lat: 41.755042, lng:-72.665532} },
-  {title:'Burger King', location:{lat: 41.757419, lng:-72.664175} },
+  {title:'BurgerKing', location:{lat: 41.757419, lng:-72.664175} },
   {title:'Subway', location:{lat: 41.767228, lng:-72.676470} },
   {title:'Quiznos', location:{lat: 41.764117, lng:-72.671873} }
 ]);
@@ -40,6 +40,44 @@ function initMap() {
        icon: defaultMarker,
        animation: google.maps.Animation.DROP
            });
+ //Grabs the wikipedia api and sets the search to the marker title.
+   function wikipedia(title){
+
+
+       var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
+                   'action=opensearch&search=' + title +
+                   '&format=json&callback=wikiCallback'
+ //If you cant get a wiki request, throw an error message.
+               var wikiError = setTimeout(function(){
+                 window.alert('Cant find that wiki request yo!');
+                 console.log("wikipedia aint working!!!")
+               }, 8000);
+
+
+               $.ajax({
+                 url: wikiUrl,
+                 dataType: "jsonp",
+                 jsonp: "callback",
+                 success: function (response){
+                   var articleList = response[1]
+                   for(var i = 0; i < articleList.length; i++){
+                     wikiStr = articleList[i];
+
+                     var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
+                     var windowContent = '<div>' + url + '</div>';
+
+                     console.log("this " + windowContent);
+
+                     return wikiStr;
+
+                   }
+           // Clears the time out if the wiki request is made.
+                   clearTimeout(wikiError);
+                 }
+
+               });
+
+           };
 
 
       locationArray()[i].marker = marker;
@@ -79,17 +117,17 @@ function initMap() {
       };
       marker.addListener('click', function() {
 
-            this.setIcon(highlightedMarker);
+            this.setIcon(defaultMarker);
           });
 
       marker.addListener('click', function() {
-            this.setIcon(defaultMarker);
+            this.setIcon(highlightedMarker);
           });
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
           var wikiResult = wikipedia(marker.title);
-          console.log("that " + wikiResult);
+          console.log("that " + marker.title);
           streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
           infoWindow.open( map, marker);
           infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div><div>"+ wikiResult + "</div>");
@@ -114,47 +152,6 @@ function changeMarker (color){
 
       };
 
-//Grabs the wikipedia api and sets the search to the marker title.
-function wikipedia(title){
-
-
-    var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
-        'action=opensearch&search=' + title +
-        '&format=json&callback=wikiCallback'
-
-//If you cant get a wiki request, throw an error message.
-    var wikiError = setTimeout(function(){
-      window.alert('Cant find that wiki request yo!');
-      console.log("wikipedia aint working!!!")
-    }, 8000);
-
-
-    $.ajax({
-      url: wikiUrl,
-      dataType: "jsonp",
-      jsonp: "callback",
-      success: function (response){
-        var wikiArticle = response[0];
-
-
-
-        for(var i = 0; i < wikiArticle.length; i++){
-          var title = locationArray()[i].locations;
-          wikiStr = wikiArticle[i];
-
-          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
-          var str = '<div>'+ url + '</div>';
-
-          console.log("this " + response[i]);
-          return response[i];
-        }
-// Clears the time out if the wiki request is made.
-        clearTimeout(wikiError);
-      }
-
-    });
-
-};
 };
 
 <!-- View Model -->
@@ -163,7 +160,11 @@ function wikipedia(title){
 function viewModel() {
   this.openWindow = function(location) {
     google.maps.event.trigger(location.marker,'click');
+
   };
+
+
+
 
 
 };
