@@ -40,44 +40,6 @@ function initMap() {
        icon: defaultMarker,
        animation: google.maps.Animation.DROP
            });
- //Grabs the wikipedia api and sets the search to the marker title.
-   function wikipedia(title){
-
-
-       var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
-                   'action=opensearch&search=' + title +
-                   '&format=json&callback=wikiCallback'
- //If you cant get a wiki request, throw an error message.
-               var wikiError = setTimeout(function(){
-                 window.alert('Cant find that wiki request yo!');
-                 console.log("wikipedia aint working!!!")
-               }, 8000);
-
-
-               $.ajax({
-                 url: wikiUrl,
-                 dataType: "jsonp",
-                 jsonp: "callback",
-                 success: function (response){
-                   var articleList = response[1]
-                   for(var i = 0; i < articleList.length; i++){
-                     wikiStr = articleList[i];
-
-                     var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
-                     var windowContent = '<div>' + url + '</div>';
-
-                     console.log("this " + windowContent);
-
-                     return wikiStr;
-
-                   }
-           // Clears the time out if the wiki request is made.
-                   clearTimeout(wikiError);
-                 }
-
-               });
-
-           };
 
 
       locationArray()[i].marker = marker;
@@ -126,8 +88,9 @@ function initMap() {
 
       google.maps.event.addListener(marker,'click', ( function(marker){
           return function() {
-          var wikiResult = wikipedia(marker.title);
-          console.log("that " + marker.title);
+            locationArray().push(wikipedia(marker.title));
+
+          console.log("that " + wikiResult);
           streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
           infoWindow.open( map, marker);
           infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div><div>"+ wikiResult + "</div>");
@@ -152,6 +115,52 @@ function changeMarker (color){
 
       };
 
+//Grabs the wikipedia api and sets the search to the marker title.
+function wikipedia(title){
+
+
+    var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
+        'action=opensearch&search=' + title +
+        '&format=json&callback=wikiCallback'
+
+//If you cant get a wiki request, throw an error message.
+    var wikiError = setTimeout(function(){
+      window.alert('Cant find that wiki request yo!');
+      console.log("wikipedia aint working!!!")
+    }, 8000);
+
+$(document).ready(function(){
+    $.ajax({
+      url: wikiUrl,
+      dataType: "jsonp",
+      jsonp: "callback",
+      success: function (response){
+        var articleList = response[1]
+        for(var i = 0; i < articleList.length; i++){
+          wikiStr = articleList[i];
+
+          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
+          var windowContent = '<div>' + url + '</div>';
+          wikiResult = windowContent;
+
+          console.log(wikiResult)
+
+
+          console.log("this " + windowContent);
+
+
+          return wikiStr;
+
+        }
+
+// Clears the time out if the wiki request is made.
+        clearTimeout(wikiError);
+      }
+
+    });
+  });
+
+};
 };
 
 <!-- View Model -->
