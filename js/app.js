@@ -85,19 +85,20 @@ function initMap() {
       marker.addListener('click', function() {
             this.setIcon(highlightedMarker);
           });
+        //  locationArray().push(wikipedia(marker.title));
+        wikipedia(locationArray()[i]);
 
-      google.maps.event.addListener(marker,'click', ( function(marker){
+
+      google.maps.event.addListener(marker,'click', ( function(marker, location){
           return function() {
-            locationArray().push(wikipedia(marker.title));
-
-          console.log("that " + wikiResult);
+          console.log("that " + location);
           streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
           infoWindow.open( map, marker);
-          infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div><div>"+ wikiResult + "</div>");
+          infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div><div><a href=" + location.url + ">"+ location.url +"</a></div>");
 
 
       }
-})(marker));
+})(marker, locationArray()[i]));
 
 };
 
@@ -116,7 +117,7 @@ function changeMarker (color){
       };
 
 //Grabs the wikipedia api and sets the search to the marker title.
-function wikipedia(title){
+function wikipedia(location){
 
 
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
@@ -129,35 +130,20 @@ function wikipedia(title){
       console.log("wikipedia aint working!!!")
     }, 8000);
 
-$(document).ready(function(){
+
     $.ajax({
       url: wikiUrl,
       dataType: "jsonp",
       jsonp: "callback",
       success: function (response){
-        var articleList = response[1]
-        for(var i = 0; i < articleList.length; i++){
-          wikiStr = articleList[i];
-
-          var url = 'http://en.wikipedia.org/wiki/' + wikiStr;
-          var windowContent = '<div>' + url + '</div>';
-          wikiResult = windowContent;
-
-          console.log(wikiResult)
+        var url = response[3][0];
+            location.url = url;
+            clearTimeout(wikiError);
+            console.log('this ' + location.url);
 
 
-          console.log("this " + windowContent);
-
-
-          return wikiStr;
-
-        }
-
-// Clears the time out if the wiki request is made.
-        clearTimeout(wikiError);
       }
 
-    });
   });
 
 };
