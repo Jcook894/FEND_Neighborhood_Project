@@ -1,13 +1,13 @@
 <!-- Global Variables -->
 var map;
 var marker;
-var locationArray = ko.observableArray ([
+var locationArray = [
   {title:'State House', location:{lat: 41.763711, lng:-72.685093} },
   {title:'Hartford School', location:{lat: 41.755042, lng:-72.665532} },
   {title:'BurgerKing', location:{lat: 41.757419, lng:-72.664175} },
   {title:'Subway', location:{lat: 41.767228, lng:-72.676470} },
   {title:'Quiznos', location:{lat: 41.764117, lng:-72.671873} }
-]);
+];
 
 var style=[{elementType:"geometry",stylers:[{color:"#1d2c4d"}]},{elementType:"labels.text.fill",stylers:[{color:"#8ec3b9"}]},{elementType:"labels.text.stroke",stylers:[{color:"#1a3646"}]},{featureType:"administrative.country",elementType:"geometry.stroke",stylers:[{color:"#4b6878"}]},{featureType:"administrative.land_parcel",elementType:"labels.text.fill",stylers:[{color:"#64779e"}]},{featureType:"administrative.province",elementType:"geometry.stroke",stylers:[{color:"#4b6878"}]},{featureType:"landscape.man_made",elementType:"geometry.stroke",stylers:[{color:"#334e87"}]},{featureType:"landscape.natural",elementType:"geometry",stylers:[{color:"#023e58"}]},{featureType:"poi",elementType:"geometry",stylers:[{color:"#283d6a"}]},{featureType:"poi",elementType:"labels.text.fill",stylers:[{color:"#6f9ba5"}]},{featureType:"poi",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"poi.park",elementType:"geometry.fill",stylers:[{color:"#023e58"}]},{featureType:"poi.park",elementType:"labels.text.fill",stylers:[{color:"#3C7680"}]},{featureType:"road",elementType:"geometry",stylers:[{color:"#304a7d"}]},{featureType:"road",elementType:"labels.text.fill",stylers:[{color:"#98a5be"}]},{featureType:"road",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"road.highway",elementType:"geometry",stylers:[{color:"#2c6675"}]},{featureType:"road.highway",elementType:"geometry.stroke",stylers:[{color:"#255763"}]},{featureType:"road.highway",elementType:"labels.text.fill",stylers:[{color:"#b0d5ce"}]},{featureType:"road.highway",elementType:"labels.text.stroke",stylers:[{color:"#023e58"}]},{featureType:"transit",elementType:"labels.text.fill",stylers:[{color:"#98a5be"}]},{featureType:"transit",elementType:"labels.text.stroke",stylers:[{color:"#1d2c4d"}]},{featureType:"transit.line",elementType:"geometry.fill",stylers:[{color:"#283d6a"}]},{featureType:"transit.station",elementType:"geometry",stylers:[{color:"#3a4762"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#0e1626"}]},{featureType:"water",elementType:"labels.text.fill",stylers:[{color:"#4e6d70"}]}];
 
@@ -29,9 +29,9 @@ function initMap() {
 
 // Iterates through the locationArray and gives the marker a proper
 // location.
- for(var i = 0; i < locationArray().length; i++){
-   var locations = locationArray()[i].location;
-   var title = locationArray()[i].title;
+ for(var i = 0; i < locationArray.length; i++){
+   var locations = locationArray[i].location;
+   var title = locationArray[i].title;
 
    var marker = new google.maps.Marker({
        position: locations,
@@ -42,7 +42,7 @@ function initMap() {
            });
 
 
-      locationArray()[i].marker = marker;
+      locationArray[i].marker = marker;
 
       var message = "hello world!";
 
@@ -74,8 +74,6 @@ function initMap() {
             infoWindow.setContent('<div>No Street View Found</div>');
           }
 
-
-
       };
       marker.addListener('click', function() {
 
@@ -85,8 +83,7 @@ function initMap() {
       marker.addListener('click', function() {
             this.setIcon(highlightedMarker);
           });
-        //  locationArray().push(wikipedia(marker.title));
-        wikipedia(locationArray()[i]);
+        wikipedia(locationArray[i]);
 
 
       google.maps.event.addListener(marker,'click', ( function(marker, location){
@@ -98,7 +95,7 @@ function initMap() {
 
 
       }
-})(marker, locationArray()[i]));
+})(marker, locationArray[i]));
 
 };
 
@@ -153,14 +150,10 @@ function wikipedia(location){
 
 //Binds the location title to the list in the navigation bar.
 function viewModel() {
+
   this.openWindow = function(location) {
     google.maps.event.trigger(location.marker,'click');
-
   };
-
-
-
-
 
 };
 
