@@ -11,12 +11,14 @@
     <div id="mySidenav" class="sidenav" >
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <h1>Locations</h1>
-        <input type="text" />
-          <ul data-bind="foreach: locationArray">
-            <li>
-              <button data-bind="text: title, click: $root.openWindow"></button>
-            </li>
-          </ul>
+        <div class="container">
+        <input type="text" data-bind="textInput: filter"/>
+        <table>
+          <tbody data-bind="foreach: filteredItems">
+            <tr><td data-bind="text: title, click: $root.openWindow"></td></tr>
+          </tbody>
+        </table>
+          </div>
         </div>
       <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Location Menu</span>
       <div id="map"></div>

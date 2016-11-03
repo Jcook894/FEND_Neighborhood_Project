@@ -93,7 +93,6 @@ function initMap() {
           infoWindow.open( map, marker);
           infoWindow.setContent("<div>" + marker.title + "</div><div id='pano'></div><div><a href=" + location.url + ">"+ location.url +"</a></div>");
 
-
       }
 })(marker, locationArray[i]));
 
@@ -116,7 +115,6 @@ function changeMarker (color){
 //Grabs the wikipedia api and sets the search to the marker title.
 function wikipedia(location){
 
-
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
         'action=opensearch&search=' + title +
         '&format=json&callback=wikiCallback'
@@ -138,7 +136,6 @@ function wikipedia(location){
             clearTimeout(wikiError);
             console.log('this ' + location.url);
 
-
       }
 
   });
@@ -150,6 +147,18 @@ function wikipedia(location){
 
 //Binds the location title to the list in the navigation bar.
 function viewModel() {
+  var self = this;
+
+  self.filter = ko.observable('');
+
+  self.items = ko.observableArray(locationArray);
+  console.log(self.items);
+
+  self.filteredItems = ko.computed(function() {
+    var filter = self.filter();
+    if (!filter) { return self.items(); }
+    return self.items().filter(function(i) { return i.title.indexOf(filter) > -1; });
+  });
 
   this.openWindow = function(location) {
     google.maps.event.trigger(location.marker,'click');
