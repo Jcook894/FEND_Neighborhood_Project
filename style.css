@@ -1,7 +1,13 @@
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+span {
+  font-size: 30px;
+  cursor: pointer;
 }
 
 #map {
@@ -46,7 +52,6 @@ body {
 }
 
 @media screen and (max-height: 100px) {
-  .sidenav {padding-top: 0px}
   .sidenav {font-size: 12}
 
 }
