@@ -292,14 +292,14 @@ function initMap() {
             infoWindow.setContent('<div>No Street View Found</div>');
           }
 
-      };
+      }
 
 //Calls the wikipedia function with the locationArray passed in it.
 
 //The marker event listener that opens the infoWindow with the correct information of the location.
       google.maps.event.addListener(marker,'click', ( function(marker, location){
           return function() {
-          console.log("that " + location);
+
           streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetData);
 //Checks for markers and sets the icon to defaultMarker
           if(infoWindow.marker){
@@ -389,7 +389,7 @@ function ViewModel(marker) {
       return self.items();
     }
     return self.items().filter(function(i) {
-      var match= i.title.indexOf(filter) > -1;
+      var match= i.title.toLowerCase().indexOf(filter) > -1;
       i.marker.setVisible(match);
       return match;
   });
