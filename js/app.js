@@ -369,20 +369,31 @@ ko.applyBindings( new ViewModel());
 //Binds the location title to the list in the navigation bar.
 function ViewModel(marker) {
   var self = this;
-
-  self.marker = ko.observableArray(markers);
+  
 //Gets value from the search and filters through the array.
   self.filter = ko.observable('');
 //Sets the locationArray as a ko.observableArray.
   self.items = ko.observableArray(locationArray);
-  console.log(markers);
 
 //Computed function that filters through the locationArray
   self.filteredItems = ko.computed(function() {
     var filter = self.filter();
-    if (!filter) { return self.items() }
-    return self.items().filter(function(i) { return i.title.indexOf(filter) > -1; });
-    console.log(marker)
+    if (!filter) {
+      for(var i = 0; i < markers.length; i++){
+
+        markers[i].setVisible()
+        console.log(markers)
+      }
+      return self.items();
+    }
+    return self.items().filter(function(i) {
+      var match= i.title.indexOf(filter) > -1;
+      i.marker.setVisible(match);
+      return match;
+  });
+
+
+
   });
 //When the location is clicked, it opens the infoWindow.
   this.openWindow = function(location) {
