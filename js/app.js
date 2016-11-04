@@ -335,6 +335,9 @@ function changeMarker (color){
 //Grabs the wikipedia api and sets the search to the marker title.
 function wikipedia(location){
 
+//Waiting for the wiki request
+  location.url = 'searching...'
+
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?' +
         'action=opensearch&search=' + title +
         '&format=json&callback=wikiCallback'
@@ -369,7 +372,6 @@ ko.applyBindings( new ViewModel());
 //Binds the location title to the list in the navigation bar.
 function ViewModel(marker) {
   var self = this;
-  
 //Gets value from the search and filters through the array.
   self.filter = ko.observable('');
 //Sets the locationArray as a ko.observableArray.
